@@ -15,14 +15,15 @@ MONGODB_DBNAME=<your-db-name-here>
 1. Create an `.env` file in the root directory, and fill it in with your MongoDB connection data.  
 2. Open a terminal in the root directory and type:
 ```
-npm i
 cd instayum-front
+npm i
 npm run dev
 ``` 
 
 3. Open another terminal in the root directory:  
 ```
 cd instayum-back
+npm i
 npm run start:dev
 ```
 4. Finally, go to `http://localhost:5173/` in your browser.
