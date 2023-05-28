@@ -39,6 +39,8 @@ bower_components
 build/Release
 
 # Dependency directories
+instayum-back/node_modules/
+instayum-front/node_modules/
 node_modules/
 jspm_packages/
 
