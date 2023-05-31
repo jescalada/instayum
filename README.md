@@ -26,4 +26,4 @@ cd instayum-back
 npm i
 npm run start:dev
 ```
-4. Finally, go to `http://localhost:5173/` in your browser.
+4. Finally, go to `http://localhost:3000/` in your browser.
