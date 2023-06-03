@@ -95,4 +95,40 @@ export class RecipesController {
     console.log(`Request recipeId: ${params.id}`);
     return `Attempting to fetch the ingredients for recipeId ${params.id}`;
   }
+
+  @Post('addRecipeDataFromFile')
+  async addRecipeDataFromFile(@Res() response) {
+    try {
+      const addedRecipes = await this.recipesService.addRecipeDataFromJSON(
+        './recipes.json',
+      );
+      return response.status(HttpStatus.OK).json({
+        message: 'Recipes added!',
+        addedRecipes: addedRecipes,
+      });
+    } catch (err) {
+      return response.status(HttpStatus.NOT_FOUND).json({
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong... Error: ${err}`,
+        error: 'Server Error',
+      });
+    }
+  }
+
+  @Post('deleteAll')
+  async deleteAll(@Res() response) {
+    try {
+      const deleted = await this.recipesService.deleteAll();
+      return response.status(HttpStatus.OK).json({
+        message: 'Recipes nuked!',
+        deleted: deleted,
+      });
+    } catch (err) {
+      return response.status(HttpStatus.NOT_FOUND).json({
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `Something went wrong... Error: ${err}`,
+        error: 'Server Error',
+      });
+    }
+  }
 }

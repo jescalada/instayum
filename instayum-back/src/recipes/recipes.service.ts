@@ -1,8 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateRecipeDto } from 'src/dto/create-recipe.dto';
 import { IRecipe } from 'src/interface/recipe.interface';
+import recipesJson from './recipes.json';
+import { DeleteResult } from 'mongodb';
 
 @Injectable()
 export class RecipesService {
@@ -29,5 +35,23 @@ export class RecipesService {
       throw new NotFoundException(`Recipe #${recipeId} not found!`);
     }
     return existingRecipe;
+  }
+
+  async addRecipeDataFromJSON(filename: string): Promise<IRecipe[]> {
+    const addedRecipes = await this.recipeModel.insertMany(recipesJson);
+
+    if (!addedRecipes) {
+      throw new InternalServerErrorException(`Screwed something up! Whoopsie`);
+    }
+    return addedRecipes;
+  }
+
+  async deleteAll(): Promise<DeleteResult> {
+    const deleted = await this.recipeModel.deleteMany({});
+
+    if (!deleted) {
+      throw new InternalServerErrorException("Couldn't delete, whoopsie!");
+    }
+    return deleted;
   }
 }
