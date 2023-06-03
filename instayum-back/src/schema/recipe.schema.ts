@@ -4,7 +4,13 @@ import { Ingredient } from './ingredient';
 @Schema()
 export class Recipe {
   @Prop()
-  name: string;
+  recipeId: number;
+
+  @Prop()
+  recipeName: string;
+
+  @Prop()
+  imageFilename: string;
 
   @Prop()
   steps: string[];
