@@ -19,6 +19,8 @@
 </template>
 
 <script setup lang="ts">
+import { landing } from '@/stores/landing'
+import { api } from '@/stores/api'
 import { ref, watch } from 'vue'
 
 const redirectedEvents = [
@@ -34,6 +36,7 @@ const error = ref()
 const isRecognizing = ref<boolean>(false)
 const runtimeTranscription = ref<string>('')
 const transcription = ref<Array>([])
+const requestSent = ref<boolean>(false)
 
 const props = withDefaults(
   defineProps<{
@@ -107,20 +110,28 @@ recognition.addEventListener('error', (err: string) => {
 })
 
 // Store the runtime captured transciption text
-recognition.addEventListener('result', (event) => {
+recognition.addEventListener('result', async (event) => {
   const results = Array.from(event.results)
   const text = results
     .map((result) => result[0])
     .map((result) => result.transcript)
     .join('')
   const isFinal = results.some((result) => result.isFinal)
-  if (text) {
+  if (text && !isFinal) {
     runtimeTranscription.value = text
+    landing.value.setQuery(runtimeTranscription.value)
   }
-  if (isFinal) {
-    console.log('Speech ended, sending request to DB.')
-    const finalResult = recognition.stop()
-    console.log('finalResult: ', finalResult)
+  if (isFinal && !requestSent.value) {
+    await fetch(
+      api.API_PATH +
+        '/recipes?' +
+        new URLSearchParams({
+          query: runtimeTranscription.value,
+        })
+    ).then((response) => {
+      requestSent.value = response.ok
+    })
+    // todo: make the recording stop at this point (otherwise speech continues to be recorded)
   }
   console.log(event, isFinal)
 })
