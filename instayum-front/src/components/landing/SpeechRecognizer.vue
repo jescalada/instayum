@@ -122,14 +122,20 @@ recognition.addEventListener('result', async (event) => {
     landing.value.setQuery(runtimeTranscription.value)
   }
   if (isFinal && !requestSent.value) {
+    let results
     await fetch(
       api.API_PATH +
         '/recipes?' +
         new URLSearchParams({
           query: runtimeTranscription.value,
-        })
-    ).then((response) => {
-      requestSent.value = response.ok
+        }),
+      {
+        method: 'GET',
+      }
+    ).then(async (response) => {
+      results = await response.json()
+      requestSent.value = true
+      console.log(results)
     })
     // todo: make the recording stop at this point (otherwise speech continues to be recorded)
   }
