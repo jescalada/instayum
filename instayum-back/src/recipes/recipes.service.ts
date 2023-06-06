@@ -54,4 +54,84 @@ export class RecipesService {
     }
     return deleted;
   }
+
+  async queryRecipes(query: string, resultLimit: number): Promise<IRecipe[]> {
+    const ingredientsInQuery = await this.processQueryIntoIngredientNames(
+      query,
+    );
+
+    return this.recipeModel.aggregate([
+      {
+        $addFields: {
+          weight: {
+            $size: {
+              $setIntersection: [
+                '$ingredients.ingredientName',
+                ingredientsInQuery,
+              ],
+            },
+          },
+        },
+      },
+      {
+        $sort: {
+          weight: -1,
+        },
+      },
+      {
+        $limit: resultLimit,
+      },
+    ]);
+  }
+
+  private async processQueryIntoIngredientNames(
+    query: string,
+  ): Promise<string[]> {
+    const validIngredients: string[] = await this.getUniqueIngredients().then(
+      (response) => {
+        return response[0].uniqueValues;
+      },
+    );
+    const ingredientsInQuery: string[] = [];
+    query.split(' ').forEach((keyword) => {
+      if (validIngredients.some((ingredient) => ingredient.includes(keyword))) {
+        ingredientsInQuery.push(keyword);
+      }
+    });
+    console.log('Ingredients in the query: ', ingredientsInQuery);
+    return ingredientsInQuery;
+  }
+
+  private async getUniqueIngredients(): Promise<any> {
+    return await this.recipeModel.aggregate([
+      {
+        $unwind: '$ingredients',
+      },
+      {
+        $group: {
+          _id: null,
+          ingredients: {
+            $addToSet: '$ingredients',
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          ingredients: {
+            $first: '$ingredients',
+          },
+        },
+      },
+      {
+        $unwind: '$ingredients',
+      },
+      {
+        $group: {
+          _id: null,
+          uniqueValues: { $addToSet: '$ingredients.ingredientName' },
+        },
+      },
+    ]);
+  }
 }

@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-
-const query = ref('whatever')
+import { landing } from '@/stores/landing'
 
 function search() {
-  console.log('Searching for: ' + query.value)
+  console.log('Searching for: ' + landing.value.query)
 }
 </script>
 
@@ -16,7 +14,7 @@ function search() {
       </h2>
       <input
         id="search-bar"
-        v-model="query"
+        v-model="landing.query"
         name="search-bar"
         class="border-4 border-red-700 rounded-xl p-2 m-2 w-full"
       />
@@ -26,7 +24,7 @@ function search() {
       >
         SUBMIT
       </button>
-      <p>Searching for: {{ query }}</p>
+      <p>Searching for: {{ landing.query }}</p>
     </div>
   </div>
 </template>
