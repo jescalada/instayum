@@ -5,26 +5,27 @@ import {
   HttpStatus,
   Param,
   Post,
+  Query,
   Res,
 } from '@nestjs/common';
 import { CreateRecipeDto } from 'src/dto/create-recipe.dto';
 import { RecipesService } from './recipes.service';
-import { HttpErrorByCode } from '@nestjs/common/utils/http-error-by-code.util';
+import { Response } from 'express';
 
 @Controller('recipes')
 export class RecipesController {
   constructor(private readonly recipesService: RecipesService) {}
 
   @Get()
-  async getRecipes(@Res() response) {
+  async getRecipes(@Query() query, @Res() response: Response) {
     try {
-      const recipeData = await this.recipesService.getAllRecipes();
-      return response.status(HttpStatus.OK).json({
-        message: 'All recipes found successfully!',
-        recipeData: recipeData,
-      });
+      const recipeData = await this.recipesService.queryRecipes(
+        query.query,
+        20,
+      );
+      return response.send(recipeData);
     } catch (err) {
-      return response.status(err.status).json(err.response);
+      console.log('There was an error in getting the recipes: ', err);
     }
   }
 
