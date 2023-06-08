@@ -7,15 +7,6 @@
     }"
     @click="start"
   ></div>
-
-  <span></span>
-  <div>
-    <h1>Variables</h1>
-    <p>error: {{ error }}</p>
-    <p>isRecognizing: {{ isRecognizing }}</p>
-    <p>runtimeTranscription: {{ runtimeTranscription }}</p>
-    <p>transcription: {{ transcription }}</p>
-  </div>
 </template>
 
 <script setup lang="ts">
