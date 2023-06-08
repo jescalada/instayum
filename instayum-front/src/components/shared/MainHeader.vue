@@ -3,7 +3,6 @@ function toggleHamburgerMenu() {
   const btn = document.getElementById('menu-btn')
   const menu = document.getElementById('menu')
 
-  console.log('woah just clicked the button')
   btn?.classList.toggle('open')
   menu?.classList.toggle('flex')
   menu?.classList.toggle('hidden')
@@ -52,7 +51,7 @@ function toggleHamburgerMenu() {
       <!-- Mobile Menu -->
       <div
         id="menu"
-        class="absolute top-0 bottom-0 left-0 hidden flex-col self-end w-full min-h-screen py-1 pt-32 space-y-5 text-3xl text-white bg-indigo-700 bg-opacity-80 font-bold"
+        class="z-1000 absolute top-0 bottom-0 left-0 hidden flex-col self-end w-full min-h-screen py-1 pt-32 space-y-5 text-3xl text-white bg-indigo-700 bg-opacity-80 font-bold"
       >
         <a href="#" class="hover:text-pink-500">About</a>
         <a href="#" class="hover:text-pink-500">GitHub</a>

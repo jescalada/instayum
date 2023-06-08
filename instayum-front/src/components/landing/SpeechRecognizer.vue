@@ -6,7 +6,9 @@
       active: isRecognizing,
     }"
     @click="start"
-  ></div>
+  >
+    <i class="fa-solid fa-microphone fa-2xl mt-8" style="color: #ffffff"></i>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -172,10 +174,12 @@ redirectedEvents.forEach((eName): void => {
 </script>
 
 <style>
+i {
+}
 .speech-recognizer {
   cursor: pointer;
   position: relative;
-  background-color: #4db6ac;
+  background-color: #ff9c09;
   border-radius: 50%;
   width: 64px;
   height: 64px;
@@ -183,11 +187,11 @@ redirectedEvents.forEach((eName): void => {
   transition: all ease-in 250ms;
 }
 .speech-recognizer:hover {
-  background-color: #26a69a;
+  background-color: #ff6200;
 }
 
 .speech-recognizer .error {
-  background-color: #bdbdbd;
+  background-color: #ff0000;
 }
 
 .speech-recognizer .active {

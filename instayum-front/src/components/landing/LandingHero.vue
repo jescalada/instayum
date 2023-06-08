@@ -10,28 +10,34 @@ function search() {
 <template>
   <div class="mx-auto bg-indigo-50">
     <div class="flex flex-col items-center justify-center p-2 pt-6">
-      <h2 class="text-3xl font-bold text-indigo-400 p-2">
-        What's in the fridge?
-      </h2>
+      <div class="flex flex-row">
+        <h2 class="text-2xl font-bold text-indigo-400 p-4">
+          What's in the fridge?
+        </h2>
 
-      <SpeechRecognizer
-        :lang="'en'"
-        :continuous="true"
-        :interim-results="true"
-        :max-alternatives="1"
-      />
+        <SpeechRecognizer
+          class="justify-center mb-2 z-5"
+          :lang="'en'"
+          :continuous="true"
+          :interim-results="true"
+          :max-alternatives="1"
+        />
+      </div>
+
       <input
         id="search-bar"
         v-model="landing.query"
         name="search-bar"
         class="border-4 border-indigo-600 max-w-2xl rounded-xl p-2 m-2 w-full"
       />
-      <button
-        class="grow-0 text-center p-2 bg-orange-400 border-4 border-orange-600 text-lg font-semibold text-white rounded-xl m-2 hover:drop-shadow-lg hover:bg-indigo-400 hover:border-indigo-700 transition-all"
-        @click="search()"
-      >
-        SUBMIT
-      </button>
+      <div class="flex flex-row">
+        <button
+          class="grow-0 text-center p-2 bg-orange-400 border-4 border-orange-600 text-lg font-semibold text-white rounded-xl m-2 hover:drop-shadow-lg hover:bg-indigo-400 hover:border-indigo-700 transition-all"
+          @click="search()"
+        >
+          SUBMIT
+        </button>
+      </div>
       <div class="text-indigo-700 max-w-xl">
         <h2 class="mt-6 text-2xl">How to use:</h2>
         <p class="mt-4 mb-4 text-left">
