@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import LandingPage from '@/pages/LandingPage.vue'
+import ResultsPage from '@/pages/ResultsPage.vue'
+import { ref, computed } from 'vue'
+
 function toggleHamburgerMenu() {
   const btn = document.getElementById('menu-btn')
   const menu = document.getElementById('menu')
@@ -15,19 +19,24 @@ function toggleHamburgerMenu() {
     <div class="mx-auto px-6 py-2 md:px-2 bg-indigo-900">
       <!-- Menu and Logo Container -->
       <nav class="flex items-center justify-between font-bold text-white">
-        <!-- Logo -->
-        <img src="instayum logo text.png" alt="" width="256" />
+        <a href="#/">
+          <!-- Logo -->
+          <img src="instayum logo text.png" alt="" width="256" />
+        </a>
+
         <!-- Menu -->
         <div class="hidden h-10 text-xl items-center px-4 md:flex md:space-x-8">
-          <!-- Link 1 -->
+          <!-- About Link -->
           <div class="group">
-            <a href="#">About</a>
+            <a href="#/results">Results Test</a>
             <div
               class="mx-2 group-hover:border-b group-hover:border-blue-50"
             ></div>
           </div>
+
+          <!-- GitHub Link -->
           <div class="group">
-            <a href="#">GitHub</a>
+            <a href="https://github.com/jescalada" target="_blank">GitHub</a>
             <div
               class="mx-2 group-hover:border-b group-hover:border-blue-50"
             ></div>
