@@ -15,6 +15,7 @@
 import { landing } from '@/stores/landing'
 import { api } from '@/stores/api'
 import { ref, watch } from 'vue'
+import { recipes } from '@/stores/recipes'
 
 const redirectedEvents = [
   'audiostart',
@@ -91,6 +92,9 @@ recognition.interimResults = props.interimResults
 recognition.addEventListener('start', () => {
   error.value = null
   isRecognizing.value = true
+  requestSent.value = false
+  landing.value.setQuery('')
+
   console.log('Starting...')
   emit('start')
 })
@@ -128,7 +132,9 @@ recognition.addEventListener('result', async (event) => {
     ).then(async (response) => {
       results = await response.json()
       requestSent.value = true
-      console.log(results)
+      recipes.value.setQueryResults(results)
+      location.href = '/#/results'
+      recognition.stop()
     })
     // todo: make the recording stop at this point (otherwise speech continues to be recorded)
   }
