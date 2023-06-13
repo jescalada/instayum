@@ -4,6 +4,12 @@ import ResultsHero from '@/components/results/ResultsHero.vue'
 import RecipeResultCard from '@/components/results/RecipeResultCard.vue'
 import { recipes } from '@/stores/recipes'
 import { landing } from '@/stores/landing'
+
+function computeDummyTime() {}
+
+function computeDifficulty() {}
+
+function generateDescription() {}
 </script>
 
 <template>
@@ -14,7 +20,6 @@ import { landing } from '@/stores/landing'
     <strong>{{ landing.query }}</strong
     >:
   </p>
-  <p>{{ recipes.queryResults }}</p>
   <RecipeResultCard
     v-for="recipe in recipes.queryResults"
     :key="recipe.recipeId"

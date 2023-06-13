@@ -2,8 +2,6 @@
 import { recipes } from '@/stores/recipes'
 import { api } from '@/stores/api'
 import { onMounted, ref } from 'vue'
-import { tsConstructSignatureDeclaration } from '@babel/types'
-import { diff } from 'jest-diff'
 
 const recipe = ref({ recipeName: 'Default Recipe' })
 const difficultyColor = ref('text-green-600')
@@ -33,7 +31,7 @@ async function fetchRecipe() {
           ? 'instayum logo mouth.png'
           : recipe.value.imageFilename
       setDifficultyColor(recipe.value)
-      console.log(recipe.value)
+      recipes.value.setActiveRecipe(recipe)
     }
   )
 }
@@ -45,7 +43,7 @@ onMounted(() => {
 
 <template>
   <div
-    class="flex flex-col items-center justify-center p-2 pt-6 mx-auto max-w-2xl text-center bg-indigo-50"
+    class="flex flex-col items-center justify-center p-2 pt-2 mx-auto max-w-2xl text-center bg-indigo-50"
   >
     <div class="flex md:flex-row flex-col rounded-xl">
       <img

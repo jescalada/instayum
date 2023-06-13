@@ -9,4 +9,8 @@ export const recipes = ref({
   setActiveId(value: number) {
     this.activeId = value
   },
+  activeRecipe: {},
+  setActiveRecipe(value) {
+    this.activeRecipe = value
+  },
 })
