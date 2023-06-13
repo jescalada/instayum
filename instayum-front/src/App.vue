@@ -3,10 +3,12 @@ import LandingPage from './pages/LandingPage.vue'
 import ResultsPage from './pages/ResultsPage.vue'
 import { ref, computed } from 'vue'
 import { recipes } from './stores/recipes'
+import RecipePage from './pages/RecipePage.vue'
 
 const routes = {
   '': LandingPage,
   results: ResultsPage,
+  recipe: RecipePage,
 }
 
 const currentPath = ref(window.location.hash)
@@ -23,7 +25,6 @@ const currentView = computed(() => {
 </script>
 
 <template>
-  Current component is: {{ currentView }} Current path is: {{ currentPath }}
   <component :is="currentView" />
 </template>
 
