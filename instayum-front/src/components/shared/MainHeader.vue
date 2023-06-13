@@ -21,7 +21,7 @@ function toggleHamburgerMenu() {
       <nav class="flex items-center justify-between font-bold text-white">
         <a href="#/">
           <!-- Logo -->
-          <img src="instayum logo text.png" alt="" width="256" />
+          <img src="/instayum logo text.png" alt="" width="256" />
         </a>
 
         <!-- Menu -->

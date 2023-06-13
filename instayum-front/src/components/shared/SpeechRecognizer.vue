@@ -136,7 +136,6 @@ recognition.addEventListener('result', async (event) => {
       location.href = '/#/results'
       recognition.stop()
     })
-    // todo: make the recording stop at this point (otherwise speech continues to be recorded)
   }
   console.log(event, isFinal)
 })
