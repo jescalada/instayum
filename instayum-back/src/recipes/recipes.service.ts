@@ -29,7 +29,9 @@ export class RecipesService {
   }
 
   async getRecipe(recipeId: string): Promise<IRecipe> {
-    const existingRecipe = await this.recipeModel.findById(recipeId).exec();
+    const existingRecipe = await this.recipeModel
+      .findOne({ recipeId: recipeId })
+      .exec();
 
     if (!existingRecipe) {
       throw new NotFoundException(`Recipe #${recipeId} not found!`);

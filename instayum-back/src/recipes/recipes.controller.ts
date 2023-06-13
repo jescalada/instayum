@@ -54,10 +54,7 @@ export class RecipesController {
   async getRecipe(@Res() response, @Param('id') recipeId: string) {
     try {
       const existingRecipe = await this.recipesService.getRecipe(recipeId);
-      return response.status(HttpStatus.OK).json({
-        message: 'Recipe found!',
-        existingRecipe: existingRecipe,
-      });
+      return response.send(existingRecipe);
     } catch (err) {
       return response.status(HttpStatus.NOT_FOUND).json({
         statusCode: HttpStatus.NOT_FOUND,
