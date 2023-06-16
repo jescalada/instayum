@@ -11,7 +11,7 @@ function toggleCheckbox() {
 </script>
 
 <template>
-  <div class="max-w-2xl mx-auto inline-block float-right">
+  <div class="self-end inline-block float-right">
     <!-- Container for alignment -->
     <div class="flex flex-row w-full m-3">
       <!-- Title -->
