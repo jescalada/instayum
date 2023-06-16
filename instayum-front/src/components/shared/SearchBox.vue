@@ -28,7 +28,7 @@ function search() {
         id="search-bar"
         v-model="landing.query"
         name="search-bar"
-        class="border-4 border-indigo-600 max-w-2xl rounded-xl p-2 m-2 w-full"
+        class="border-4 border-indigo-600 max-w-2xl rounded-xl p-2 m-2 w-full text-indigo-700"
       />
       <div class="flex flex-row">
         <button

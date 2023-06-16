@@ -43,15 +43,15 @@ onMounted(() => {
 
 <template>
   <div
-    class="flex flex-col items-center justify-center p-2 pt-2 mx-auto max-w-2xl text-center bg-indigo-50"
+    class="flex flex-col items-center justify-center p-2 pt-8 mx-auto w-full text-center"
   >
     <div class="flex md:flex-row flex-col rounded-xl">
       <img
         :src="recipe.imageFilename"
-        class="h-64 w-full object-cover rounded-md p-2"
+        class="h-64 w-full object-cover rounded-md p-2 shadow-md"
       />
       <div class="flex flex-col">
-        <h2 class="text-2xl font-bold p-2 mb-2 md:mt-2">
+        <h2 class="text-2xl font-bold p-2 mb-2 md:mt-2 text-indigo-700">
           {{ recipe.recipeName }}
         </h2>
         <div class="flex flex-col self-end align-bottom m-2">
