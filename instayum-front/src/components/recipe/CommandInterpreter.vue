@@ -14,8 +14,9 @@
 <script setup lang="ts">
 import { landing } from '@/stores/landing'
 import { api } from '@/stores/api'
-import { ref, watch } from 'vue'
+import { onUnmounted, ref, watch } from 'vue'
 import { recipes } from '@/stores/recipes'
+import { RecipeCommand } from './RecipeCommand'
 
 const redirectedEvents = [
   'audiostart',
@@ -30,7 +31,7 @@ const error = ref()
 const isRecognizing = ref<boolean>(false)
 const runtimeTranscription = ref<string>('')
 const transcription = ref<Array>([])
-const requestSent = ref<boolean>(false)
+const commandProcessed = ref<boolean>(false)
 
 const props = withDefaults(
   defineProps<{
@@ -92,7 +93,6 @@ recognition.interimResults = props.interimResults
 recognition.addEventListener('start', () => {
   error.value = null
   isRecognizing.value = true
-  requestSent.value = false
   landing.value.setQuery('')
 
   console.log('Starting...')
@@ -118,24 +118,30 @@ recognition.addEventListener('result', async (event) => {
     runtimeTranscription.value = text
     landing.value.setQuery(runtimeTranscription.value)
   }
-  if (isFinal && !requestSent.value) {
-    let results
-    await fetch(
-      api.API_PATH +
-        '/recipes?' +
-        new URLSearchParams({
-          query: runtimeTranscription.value,
-        }),
-      {
-        method: 'GET',
-      }
-    ).then(async (response) => {
-      results = await response.json()
-      requestSent.value = true
-      recipes.value.setQueryResults(results)
-      location.href = '/#/results'
-      recognition.stop()
-    })
+  if (isFinal) {
+    const command: RecipeCommand = processCommand(runtimeTranscription.value)
+    recipes.value.setActiveRecipeCommand(command)
+    recognition.abort()
+    setTimeout(() => {
+      recognition.start()
+    }, 500)
+    // let results
+    // await fetch(
+    //   api.API_PATH +
+    //     '/recipes?' +
+    //     new URLSearchParams({
+    //       query: runtimeTranscription.value,
+    //     }),
+    //   {
+    //     method: 'GET',
+    //   }
+    // ).then(async (response) => {
+    //   results = await response.json()
+    //   requestSent.value = true
+    //   recipes.value.setQueryResults(results)
+    //   location.href = '/#/results'
+    //   recognition.stop()
+    // })
   }
   console.log(event, isFinal)
 })
@@ -149,7 +155,7 @@ recognition.addEventListener('speechend', () => {
 })
 
 recognition.addEventListener('soundend', (event) => {
-  console.log('Sound has stopped being received')
+  console.log('Sound has stopped being received. Restarting...')
 })
 // On recognition end if a good transciption has been captured
 // emit the transcription event with the whole transciptions list
@@ -175,6 +181,35 @@ redirectedEvents.forEach((eName): void => {
   recognition.addEventListener(eName, () => {
     emit(eName)
   })
+})
+
+function processCommand(text: string): RecipeCommand {
+  // todo: implement intelligent command matching using Natural Language Processing
+  // todo: improve matching efficiency
+  if (text.includes('next') || text.includes('continue')) {
+    return RecipeCommand.Next
+  } else if (text.includes('repeat') || text.includes('again')) {
+    return RecipeCommand.Repeat
+  } else if (
+    text.includes('previous') ||
+    text.includes('before') ||
+    text.includes('back') ||
+    text.includes('last')
+  ) {
+    return RecipeCommand.Previous
+  } else if (text.includes('ingredient')) {
+    return RecipeCommand.Ingredients
+  } else if (text.includes('first') || text.includes('start')) {
+    return RecipeCommand.First
+  } else {
+    return RecipeCommand.Invalid
+  }
+}
+
+start()
+
+onUnmounted(() => {
+  recognition.abort()
 })
 </script>
 

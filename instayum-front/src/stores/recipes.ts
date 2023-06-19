@@ -1,3 +1,4 @@
+import { RecipeCommand } from '@/components/recipe/RecipeCommand'
 import { ref } from 'vue'
 
 export const recipes = ref({
@@ -12,5 +13,9 @@ export const recipes = ref({
   activeRecipe: {},
   setActiveRecipe(value) {
     this.activeRecipe = value
+  },
+  activeRecipeCommand: RecipeCommand.Invalid,
+  setActiveRecipeCommand(value: RecipeCommand) {
+    this.activeRecipeCommand = value
   },
 })
