@@ -1,19 +1,17 @@
 <template>
   <div
+    style="display: none"
     class="speech-recognizer"
     :class="{
       error: error,
       active: isRecognizing,
     }"
     @click="start"
-  >
-    <i class="fa-solid fa-microphone fa-2xl mt-8" style="color: #ffffff"></i>
-  </div>
+  ></div>
 </template>
 
 <script setup lang="ts">
 import { landing } from '@/stores/landing'
-import { api } from '@/stores/api'
 import { onUnmounted, ref, watch } from 'vue'
 import { recipes } from '@/stores/recipes'
 import { RecipeCommand } from './RecipeCommand'
@@ -120,11 +118,12 @@ recognition.addEventListener('result', async (event) => {
   }
   if (isFinal) {
     const command: RecipeCommand = processCommand(runtimeTranscription.value)
+    recipes.value.setActiveRecipeCommand(RecipeCommand.Invalid)
     recipes.value.setActiveRecipeCommand(command)
     recognition.abort()
     setTimeout(() => {
       recognition.start()
-    }, 500)
+    }, 1000)
     // let results
     // await fetch(
     //   api.API_PATH +
@@ -186,7 +185,11 @@ redirectedEvents.forEach((eName): void => {
 function processCommand(text: string): RecipeCommand {
   // todo: implement intelligent command matching using Natural Language Processing
   // todo: improve matching efficiency
-  if (text.includes('next') || text.includes('continue')) {
+  if (
+    text.includes('next') ||
+    text.includes('continue') ||
+    text.includes('after')
+  ) {
     return RecipeCommand.Next
   } else if (text.includes('repeat') || text.includes('again')) {
     return RecipeCommand.Repeat
@@ -212,43 +215,3 @@ onUnmounted(() => {
   recognition.abort()
 })
 </script>
-
-<style>
-i {
-}
-.speech-recognizer {
-  cursor: pointer;
-  position: relative;
-  background-color: #ff9c09;
-  border-radius: 50%;
-  width: 64px;
-  height: 64px;
-  display: block;
-  transition: all ease-in 250ms;
-}
-.speech-recognizer:hover {
-  background-color: #ff6200;
-}
-
-.speech-recognizer .error {
-  background-color: #ff0000;
-}
-
-.speech-recognizer .active {
-  background-color: #ef5350;
-  -webkit-animation: pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
-  -moz-animation: pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
-  animation: pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
-}
-@keyframes pulse {
-  from {
-    box-shadow: 0 0 0 0 rgba(232, 76, 61, 0.7);
-  }
-
-  to {
-    box-shadow: 0 0 0 10px rgba(239, 83, 80, 0.1);
-    background-color: #e53935;
-    transform: scale(0.9);
-  }
-}
-</style>
