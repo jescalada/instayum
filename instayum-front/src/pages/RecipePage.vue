@@ -17,7 +17,7 @@ function toggleHandsFree(value: boolean) {
 
 <template>
   <MainHeader />
-  <div class="background bg-indigo-50">
+  <div class="background bg-indigo-50 pb-8">
     <div class="flex flex-col max-w-4xl mx-auto">
       <RecipeHero class="bg-indigo-50" />
       <HandsFreeSwitch @toggle-hands-free="toggleHandsFree" />
@@ -25,7 +25,7 @@ function toggleHandsFree(value: boolean) {
         v-if="!handsFree"
         class="bg-white rounded-xl shadow-xl border-2 border-indigo-200"
       >
-        <IngredientsCard />
+        <IngredientsCard class="ml-2" />
         <StepsCard />
       </div>
       <div

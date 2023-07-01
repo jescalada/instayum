@@ -23,8 +23,10 @@ function formatPluralIngredientUnits(
 }
 </script>
 <template>
-  <div class="max-w-4xl mx-auto mt-4">
-    <h3 class="font-semibold text-2xl mb-4 text-indigo-700">Ingredients</h3>
+  <div class="max-w-4xl mx-auto my-4">
+    <h3 class="text-left font-semibold text-2xl m-3 ml-4 text-indigo-700">
+      Ingredients
+    </h3>
     <ul class="text-left list-disc ml-8 text-indigo-500">
       <li
         v-for="ingredient in recipes.activeRecipe.ingredients"

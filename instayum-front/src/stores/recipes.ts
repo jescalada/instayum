@@ -18,4 +18,8 @@ export const recipes = ref({
   setActiveRecipeCommand(value: RecipeCommand) {
     this.activeRecipeCommand = value
   },
+  stepText: '',
+  setStepText(value: string) {
+    this.stepText = value
+  },
 })

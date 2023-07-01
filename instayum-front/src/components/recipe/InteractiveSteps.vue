@@ -1,19 +1,25 @@
 <script setup lang="ts">
 import { recipes } from '@/stores/recipes'
-import { WatchStopHandle, ref, watch } from 'vue'
+import { onMounted, ref, toRaw, watch } from 'vue'
 import CommandInterpreter from './CommandInterpreter.vue'
 import { RecipeCommand } from './RecipeCommand'
 import IngredientsCard from './IngredientsCard.vue'
-import { command } from 'yargs'
+import SpeechSynthesizer from './SpeechSynthesizer.vue'
 
 const currentStepNumber = ref<number>(-1)
 
 const ingredients = recipes.value.activeRecipe.ingredients
 const steps = recipes.value.activeRecipe.steps
 
+recipes.value.stepText = 'Ingredients'
+
 watch(recipes.value, (recipeState, previousRecipeState) => {
   document.getElementById('command-box')?.scrollIntoView({ behavior: 'smooth' })
   commandTrigger(recipeState.activeRecipeCommand)
+})
+
+onMounted(() => {
+  commandTrigger(RecipeCommand.Ingredients)
 })
 
 function commandTrigger(command: RecipeCommand) {
@@ -33,7 +39,25 @@ function commandTrigger(command: RecipeCommand) {
     case RecipeCommand.Repeat:
       onRepeat()
       break
+    default:
+      return
   }
+  synthesize()
+}
+
+async function synthesize() {
+  if (currentStepNumber.value == -1) {
+    recipes.value.setStepText('Ingredients')
+  } else {
+    const stepsRaw: string = toRaw(recipes.value.activeRecipe.steps)
+    const step: string = stepsRaw[currentStepNumber.value]
+    const stepText = step.substring(
+      steps[currentStepNumber.value].indexOf('.') + 1
+    )
+    recipes.value.setStepText(stepText)
+  }
+  console.log('synthesizing...')
+  synthesizer.value?.speak(recipes.value.stepText)
 }
 
 function onNext() {
@@ -53,32 +77,33 @@ function onFirst() {
 }
 
 function onIngredients() {
-  // todo implement ingredient container
-  // use conditional rendering?
+  currentStepNumber.value = -1
 }
 
 function onRepeat() {
   // todo repeat voice synthesis
 }
+
+const synthesizer = ref()
 </script>
 <template>
   <div class="max-w-4xl mx-auto block ml-2" id="command-box">
-    <h3 class="font-semibold text-2xl my-4">
+    <h3 class="font-semibold text-2xl m-4 text-left text-indigo-700">
       Command: {{ recipes.activeRecipeCommand }}
     </h3>
-    <p>Say: Ingredients - First - Next - Previous - Repeat</p>
+    <p class="text-left ml-4 text-indigo-700">
+      Say: <b>First</b> · <b>Next</b> · <b>Previous</b> · <b>Repeat</b> ·
+      <b>Ingredients</b>
+    </p>
     <div
-      class="m-3 mb-4 flex flex-col md:flex-row md:space-x-4 justify-between"
+      class="ml-3 my-4 flex flex-col md:flex-row md:space-x-4 justify-between"
+      v-if="currentStepNumber >= 0"
     >
       <div>
-        <h3 class="font-semibold text-lg text-left mb-2">
-          {{
-            currentStepNumber > -1
-              ? 'Step ' + (currentStepNumber + 1)
-              : 'Ingredients'
-          }}
+        <h3 class="font-semibold text-2xl my-2 mb-4 text-left text-indigo-700">
+          {{ 'Step ' + (currentStepNumber + 1) }}
         </h3>
-        <p class="text-left" v-if="currentStepNumber >= 0">
+        <p class="text-left">
           {{
             steps[currentStepNumber].substring(
               steps[currentStepNumber].indexOf('.') + 1
@@ -89,10 +114,10 @@ function onRepeat() {
       <img
         class="md:h-32 md:w-32 h-64 w-64 mx-auto shadow-md p-2"
         :src="recipes.activeRecipe.imageFilename"
-        v-if="currentStepNumber >= 0"
       />
-      <IngredientsCard v-if="currentStepNumber == -1" />
     </div>
+    <IngredientsCard v-if="currentStepNumber == -1" />
     <CommandInterpreter />
+    <SpeechSynthesizer ref="synthesizer" />
   </div>
 </template>
