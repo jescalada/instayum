@@ -1,3 +1,3 @@
 export const api = {
-  API_PATH: 'http://localhost:3000',
+  API_PATH: "https://backend-dot-instayum.uw.r.appspot.com",
 }

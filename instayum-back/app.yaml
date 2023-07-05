@@ -1,0 +1,10 @@
+runtime: nodejs18
+
+env_variables:
+  MONGODB_USER: 'juan'
+  MONGODB_PASSWORD: '3Th3KKiMFlxFj0vy4zpZcZMY'
+  MONGODB_URI: 'cluster0.nxfhi.mongodb.net/?retryWrites=true&w=majority'
+  MONGODB_DBNAME: 'instayum'
+
+service: backend
+env: standard
