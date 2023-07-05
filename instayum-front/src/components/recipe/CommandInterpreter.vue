@@ -13,23 +13,13 @@
 <script setup lang="ts">
 import { landing } from '@/stores/landing'
 import { onUnmounted, ref, watch } from 'vue'
-import { recipes } from '@/stores/recipes'
+import { commands } from '@/stores/commands'
 import { RecipeCommand } from './RecipeCommand'
-
-const redirectedEvents = [
-  'audiostart',
-  'audioend',
-  'soundstart',
-  'soundend',
-  'speechstart',
-  'speechend',
-]
 
 const error = ref()
 const isRecognizing = ref<boolean>(false)
 const runtimeTranscription = ref<string>('')
-const transcription = ref<Array>([])
-const commandProcessed = ref<boolean>(false)
+const transcription = ref()
 
 const props = withDefaults(
   defineProps<{
@@ -111,36 +101,19 @@ recognition.addEventListener('result', async (event) => {
     .map((result) => result[0])
     .map((result) => result.transcript)
     .join('')
-  const isFinal = results.some((result) => result.isFinal)
+  const isFinal = results.some((result: { isFinal: boolean }) => result.isFinal)
   if (text && !isFinal) {
     runtimeTranscription.value = text
     landing.value.setQuery(runtimeTranscription.value)
   }
   if (isFinal) {
     const command: RecipeCommand = processCommand(runtimeTranscription.value)
-    recipes.value.setActiveRecipeCommand(RecipeCommand.Invalid)
-    recipes.value.setActiveRecipeCommand(command)
+    commands.value.setActiveRecipeCommand(RecipeCommand.Invalid)
+    commands.value.setActiveRecipeCommand(command)
     recognition.abort()
     setTimeout(() => {
       recognition.start()
     }, 1000)
-    // let results
-    // await fetch(
-    //   api.API_PATH +
-    //     '/recipes?' +
-    //     new URLSearchParams({
-    //       query: runtimeTranscription.value,
-    //     }),
-    //   {
-    //     method: 'GET',
-    //   }
-    // ).then(async (response) => {
-    //   results = await response.json()
-    //   requestSent.value = true
-    //   recipes.value.setQueryResults(results)
-    //   location.href = '/#/results'
-    //   recognition.stop()
-    // })
   }
   console.log(event, isFinal)
 })
@@ -154,7 +127,7 @@ recognition.addEventListener('speechend', () => {
 })
 
 recognition.addEventListener('soundend', (event) => {
-  console.log('Sound has stopped being received. Restarting...')
+  console.log('Sound has stopped being received')
 })
 // On recognition end if a good transciption has been captured
 // emit the transcription event with the whole transciptions list
@@ -163,7 +136,7 @@ recognition.addEventListener('end', () => {
   isRecognizing.value = false
 
   if (runtimeTranscription.value !== '') {
-    transcription.value.push(runtimeTranscription.value)
+    transcription.value?.push(runtimeTranscription.value)
 
     emit('transcription', {
       transcription: transcription.value,
@@ -173,13 +146,6 @@ recognition.addEventListener('end', () => {
 
   runtimeTranscription.value = ''
   emit('end')
-})
-
-// Redirect standard events as Vue component events
-redirectedEvents.forEach((eName): void => {
-  recognition.addEventListener(eName, () => {
-    emit(eName)
-  })
 })
 
 function processCommand(text: string): RecipeCommand {
