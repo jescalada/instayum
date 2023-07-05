@@ -1,18 +1,18 @@
 <script setup lang="ts">
+let voices: SpeechSynthesisVoice[]
+
 // Create a new utterance for the specified text and add it to
 // the queue.
-const speak = (text: string) => {
-  console.log(`triggered: ${text}`)
-  // Create a new instance of SpeechSynthesisUtterance.
-  let msg = new SpeechSynthesisUtterance(text)
+const speak = async (text: string) => {
+  voices = await speechSynthesis.getVoices()
 
-  // msg.voice = {
-  //   default: true,
-  //   lang: 'en-us',
-  //   name: 'Google US English',
-  //   localService: true,
-  //   voiceURI: 'Google US English',
-  // }
+  if (speechSynthesis?.speaking) {
+    speechSynthesis.cancel()
+  }
+
+  let msg = new SpeechSynthesisUtterance(text)
+  console.log(msg)
+  msg.voice = voices.find(voice => voice.name.includes('Google US English'))
 
   // Queue this utterance.
   speechSynthesis.speak(msg)
@@ -27,7 +27,4 @@ const speechSynthesis =
 if (!speechSynthesis) {
   throw new Error('Speech Recognition is not supported in current browser.')
 }
-
-const voices = await speechSynthesis.getVoices()
-const defaultVoice = voices.find((voice) => voice.name == 'Google US English')
 </script>

@@ -29,7 +29,7 @@ const redirectedEvents = [
 const error = ref()
 const isRecognizing = ref<boolean>(false)
 const runtimeTranscription = ref<string>('')
-const transcription = ref<Array>([])
+const transcription = ref()
 const requestSent = ref<boolean>(false)
 
 const props = withDefaults(
@@ -113,7 +113,7 @@ recognition.addEventListener('result', async (event) => {
     .map((result) => result[0])
     .map((result) => result.transcript)
     .join('')
-  const isFinal = results.some((result) => result.isFinal)
+  const isFinal = results.some((result: { isFinal: boolean }) => result.isFinal)
   if (text && !isFinal) {
     runtimeTranscription.value = text
     landing.value.setQuery(runtimeTranscription.value)
@@ -151,6 +151,7 @@ recognition.addEventListener('speechend', () => {
 recognition.addEventListener('soundend', (event) => {
   console.log('Sound has stopped being received')
 })
+
 // On recognition end if a good transciption has been captured
 // emit the transcription event with the whole transciptions list
 // and the last captured sentence than reset the runtime transciption
@@ -168,13 +169,6 @@ recognition.addEventListener('end', () => {
 
   runtimeTranscription.value = ''
   emit('end')
-})
-
-// Redirect standard events as Vue component events
-redirectedEvents.forEach((eName): void => {
-  recognition.addEventListener(eName, () => {
-    emit(eName)
-  })
 })
 </script>
 
