@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { recipes } from '@/stores/recipes'
+import { commands } from '@/stores/commands'
 import { onMounted, ref, toRaw, watch } from 'vue'
 import CommandInterpreter from './CommandInterpreter.vue'
 import { RecipeCommand } from './RecipeCommand'
@@ -11,11 +12,10 @@ const currentStepNumber = ref<number>(-1)
 const ingredients = recipes.value.activeRecipe.ingredients
 const steps = recipes.value.activeRecipe.steps
 
-recipes.value.stepText = 'Ingredients'
-
-watch(recipes.value, (recipeState, previousRecipeState) => {
+watch(commands.value, (commandsState, previousCommandsState) => {
   document.getElementById('command-box')?.scrollIntoView({ behavior: 'smooth' })
-  commandTrigger(recipeState.activeRecipeCommand)
+  console.log('command, previous command', commandsState, previousCommandsState)
+  commandTrigger(commandsState.activeRecipeCommand)
 })
 
 onMounted(() => {
@@ -23,6 +23,11 @@ onMounted(() => {
 })
 
 function commandTrigger(command: RecipeCommand) {
+  console.log(
+    '*** current value, command before trigger: ',
+    currentStepNumber.value,
+    command
+  )
   switch (command) {
     case RecipeCommand.First:
       onFirst()
@@ -47,14 +52,25 @@ function commandTrigger(command: RecipeCommand) {
 
 async function synthesize() {
   if (currentStepNumber.value == -1) {
-    recipes.value.setStepText('Ingredients')
+    let ingredientSpeech = 'Ingredients: '
+    ingredients.forEach((ingredient) => {
+      ingredientSpeech += formatPluralIngredientUnits(
+        ingredient.quantity,
+        ingredient.unit,
+        ingredient.ingredientName
+      )
+      ingredientSpeech += ', '
+    })
+    recipes.value.setStepText(ingredientSpeech)
   } else {
-    const stepsRaw: string = toRaw(recipes.value.activeRecipe.steps)
+    const stepsRaw: string[] = toRaw(recipes.value.activeRecipe.steps)
     const step: string = stepsRaw[currentStepNumber.value]
     const stepText = step.substring(
       steps[currentStepNumber.value].indexOf('.') + 1
     )
-    recipes.value.setStepText(stepText)
+    recipes.value.setStepText(
+      `Step ${currentStepNumber.value + 1}: ${stepText}`
+    )
   }
   console.log('synthesizing...')
   synthesizer.value?.speak(recipes.value.stepText)
@@ -62,6 +78,7 @@ async function synthesize() {
 
 function onNext() {
   if (currentStepNumber.value < steps.length - 1) {
+    console.log('current Step: ', currentStepNumber)
     currentStepNumber.value += 1
   }
 }
@@ -84,20 +101,41 @@ function onRepeat() {
   // todo repeat voice synthesis
 }
 
+function formatPluralIngredientUnits(
+  units: number,
+  unitName: string,
+  ingredientName: string
+): string {
+  if (!unitName) {
+    return `${units} ${ingredientName}${units > 1 ? 's' : ''}`
+  }
+  return `${units} ${rtrim(unitName, 's')}${
+    units > 1 ? 's' : ''
+  } ${ingredientName}`
+}
+
+function rtrim(word: string, char: string) {
+  var end = word.length - 1
+  while (char.indexOf(word[end]) >= 0) {
+    end -= 1
+  }
+  return word.substr(0, end + 1)
+}
+
 const synthesizer = ref()
 </script>
 <template>
   <div class="max-w-4xl mx-auto block ml-2" id="command-box">
     <h3 class="font-semibold text-2xl m-4 text-left text-indigo-700">
-      Command: {{ recipes.activeRecipeCommand }}
+      Command: {{ commands.activeRecipeCommand }}
     </h3>
     <p class="text-left ml-4 text-indigo-700">
-      Say: <b>First</b> · <b>Next</b> · <b>Previous</b> · <b>Repeat</b> ·
-      <b>Ingredients</b>
+      Example commands: <br>What's the <b>First</b> step?<br>What's the <b>Next</b> step?<br>What's the <b>Previous</b> step?<br>Can you <b>Repeat</b> that?<br>
+      What are the <b>Ingredients</b>?
     </p>
     <div
-      class="ml-3 my-4 flex flex-col md:flex-row md:space-x-4 justify-between"
       v-if="currentStepNumber >= 0"
+      class="ml-3 my-4 flex flex-col md:flex-row md:space-x-4 justify-between"
     >
       <div>
         <h3 class="font-semibold text-2xl my-2 mb-4 text-left text-indigo-700">

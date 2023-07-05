@@ -10,7 +10,7 @@ function rtrim(word: string, char: string) {
 }
 
 function formatPluralIngredientUnits(
-  units: int,
+  units: number,
   unitName: string,
   ingredientName: string
 ): string {
@@ -30,7 +30,7 @@ function formatPluralIngredientUnits(
     <ul class="text-left list-disc ml-8 text-indigo-500">
       <li
         v-for="ingredient in recipes.activeRecipe.ingredients"
-        :key="ingredient"
+        :key="ingredient.ingredientName"
         class=""
       >
         {{
