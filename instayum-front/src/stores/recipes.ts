@@ -2,7 +2,7 @@ import { RecipeCommand } from '@/components/recipe/RecipeCommand'
 import { ref } from 'vue'
 
 export const recipes = ref({
-  queryResults: {},
+  queryResults: null,
   setQueryResults(value) {
     this.queryResults = value
   },
@@ -10,13 +10,20 @@ export const recipes = ref({
   setActiveId(value: number) {
     this.activeId = value
   },
-  activeRecipe: {},
+  activeRecipe: {
+    recipeName: 'Default Recipe',
+    imageFilename: 'Default Recipe',
+    ingredients: [
+      {
+        ingredientName: 'Default Ingredient',
+        unit: 'pieces',
+        quantity: 1,
+      },
+    ],
+    steps: ['Default Step'],
+  },
   setActiveRecipe(value) {
     this.activeRecipe = value
-  },
-  activeRecipeCommand: RecipeCommand.Invalid,
-  setActiveRecipeCommand(value: RecipeCommand) {
-    this.activeRecipeCommand = value
   },
   stepText: '',
   setStepText(value: string) {
