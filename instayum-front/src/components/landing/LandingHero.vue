@@ -22,7 +22,7 @@ import SearchBox from '../shared/SearchBox.vue'
           >
           when prompted to enjoy all the features in the app.
         </p>
-        <img src="/instayum logo mouth only.png" />
+        <img src="/instayum_logo_mouth_only.png" />
       </div>
     </div>
   </div>

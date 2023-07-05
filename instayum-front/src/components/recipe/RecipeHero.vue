@@ -3,7 +3,10 @@ import { recipes } from '@/stores/recipes'
 import { api } from '@/stores/api'
 import { onMounted, ref } from 'vue'
 
-const recipe = ref({ recipeName: 'Default Recipe' })
+const recipe = ref({
+  recipeName: 'Default Recipe',
+  imageFilename: 'Default',
+})
 const difficultyColor = ref('text-green-600')
 const difficultyText = ref('Easy')
 
@@ -23,12 +26,13 @@ function setDifficultyColor(recipe) {
 }
 
 async function fetchRecipe() {
+  console.log('fetching recipe at API_PATH: ', api.API_PATH)
   fetch(`${api.API_PATH}/recipes/${recipes.value.activeId}`).then(
     async (response) => {
       recipe.value = await response.json()
       recipe.value.imageFilename =
         recipe.value.imageFilename === '/recipedb/static/recipe_temp.jpg'
-          ? 'instayum logo mouth.png'
+          ? '/instayum_logo_mouth.png'
           : recipe.value.imageFilename
       setDifficultyColor(recipe.value)
       recipes.value.setActiveRecipe(recipe)

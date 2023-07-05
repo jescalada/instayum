@@ -7,7 +7,7 @@ const props = withDefaults(
   }>(),
   {
     name: 'Invalid Recipe',
-    img: 'instayum logo mouth.png',
+    img: '/instayum_logo_mouth.png',
     id: 0,
   }
 )
@@ -15,7 +15,7 @@ const props = withDefaults(
 const recipeName = props.name
 const imageFilename =
   props.img === '/recipedb/static/recipe_temp.jpg'
-    ? 'instayum logo mouth.png'
+    ? '/instayum_logo_mouth.png'
     : props.img
 
 function viewRecipe(recipeId: number) {
