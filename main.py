@@ -1,4 +1,4 @@
-import random
+# Script for mining recipes from a recipe website
 import sys
 
 import requests
@@ -74,10 +74,8 @@ def jsonify_recipe(recipe_id, recipe_name, image_filename, ingredients, steps):
 
 if __name__ == '__main__':
     # These are the limits of the valid ID ranges in the RecipeDB
-    # MINIMUM_ID = 2610
-    # MAXIMUM_ID = 149191
     MINIMUM_ID = 2610
-    MAXIMUM_ID = 3609
+    MAXIMUM_ID = 149191
     file = open('recipes.json', 'a+')
     file.write('[')
     skipped_count = 0

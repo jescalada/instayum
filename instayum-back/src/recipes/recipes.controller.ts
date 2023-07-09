@@ -1,3 +1,6 @@
+/**
+ * Recipe-related endpoints
+ */
 import {
   Body,
   Controller,
@@ -16,6 +19,12 @@ import { Response } from 'express';
 export class RecipesController {
   constructor(private readonly recipesService: RecipesService) {}
 
+  /**
+   * Gets the top 20 matches of recipe by query.
+   * @param query the raw query for the database
+   * @param response the response object
+   * @returns a JSON array of recipe objects
+   */
   @Get()
   async getRecipes(@Query() query, @Res() response: Response) {
     try {
@@ -29,6 +38,12 @@ export class RecipesController {
     }
   }
 
+  /**
+   * Adds a new recipe to DB.
+   * @param response the response object
+   * @param createRecipeDto the data for the recipe (DTO)
+   * @returns a JSON response with the new recipe if success
+   */
   @Post()
   async createRecipe(
     @Res() response,
@@ -50,6 +65,12 @@ export class RecipesController {
     }
   }
 
+  /**
+   * Gets a recipe by internal recipeId.
+   * @param response the response object
+   * @param recipeId the id to obtain
+   * @returns a JSON response with the obtained recipe if succeeded
+   */
   @Get('/:id')
   async getRecipe(@Res() response, @Param('id') recipeId: string) {
     try {
@@ -64,36 +85,11 @@ export class RecipesController {
     }
   }
 
-  @Get(':id/first')
-  getFirstStep(@Param() params: any): string {
-    console.log(`Request recipeId: ${params.id}`);
-    return `Attempting to fetch the first step for recipeId ${params.id}`;
-  }
-
-  @Get(':id/next')
-  getNextStep(@Param() params: any): string {
-    console.log(`Request recipeId: ${params.id}`);
-    return `Attempting to fetch the next step for recipeId ${params.id}`;
-  }
-
-  @Get(':id/previous')
-  getPreviousStep(@Param() params: any): string {
-    console.log(`Request recipeId: ${params.id}`);
-    return `Attempting to fetch the previous step for recipeId ${params.id}`;
-  }
-
-  @Get(':id/current')
-  getCurrentStep(@Param() params: any): string {
-    console.log(`Request recipeId: ${params.id}`);
-    return `Attempting to fetch the current step for recipeId ${params.id}`;
-  }
-
-  @Get(':id/ingredients')
-  getIngredients(@Param() params: any): string {
-    console.log(`Request recipeId: ${params.id}`);
-    return `Attempting to fetch the ingredients for recipeId ${params.id}`;
-  }
-
+  /**
+   * Parses a JSON array of recipes and adds them to DB.
+   * @param response the response object
+   * @returns a JSON response with the result of the operation
+   */
   @Post('addRecipeDataFromFile')
   async addRecipeDataFromFile(@Res() response) {
     try {
@@ -113,6 +109,11 @@ export class RecipesController {
     }
   }
 
+  /**
+   * Deletes all the recipes from database.
+   * @param response the response object
+   * @returns a JSON response with the result of the operation
+   */
   @Post('deleteAll')
   async deleteAll(@Res() response) {
     try {
