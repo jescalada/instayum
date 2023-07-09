@@ -65,4 +65,6 @@ env_variables:
 ```
 
 3. Using the terminal/Google Cloud CLI:
-`gcloud app deploy instayum-back instayum-front`
+```
+gcloud app deploy instayum-back instayum-front
+```
