@@ -63,3 +63,8 @@ handlers:
 env_variables:
   VITE_API_URL: "<your-backend-API-url>"
 ```
+
+3. Using the terminal/Google Cloud CLI:
+```
+gcloud app deploy instayum-back instayum-front
+```
