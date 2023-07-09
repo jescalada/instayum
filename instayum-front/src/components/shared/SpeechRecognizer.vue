@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import { landing } from '@/stores/landing'
 import { api } from '@/stores/api'
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { recipes } from '@/stores/recipes'
 
 // Define basic recognition variables

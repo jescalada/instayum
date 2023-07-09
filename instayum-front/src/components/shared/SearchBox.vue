@@ -26,10 +26,10 @@ import SpeechRecognizer from './SpeechRecognizer.vue'
         name="search-bar"
         class="border-4 border-indigo-600 max-w-2xl rounded-xl p-2 m-2 w-full text-indigo-700"
       />
+      <!-- Todo implement search on click -->
       <div class="flex flex-row">
         <button
           class="grow-0 text-center p-2 bg-orange-400 border-4 border-orange-600 text-lg font-semibold text-white rounded-xl m-2 hover:drop-shadow-lg hover:bg-indigo-400 hover:border-indigo-700 transition-all"
-          @click="search()"
         >
           SUBMIT
         </button>
