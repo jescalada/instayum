@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import { landing } from '@/stores/landing'
 import SpeechRecognizer from './SpeechRecognizer.vue'
-
-function search() {
-  console.log('Searching for: ' + landing.value.query)
-}
 </script>
 
 <template>

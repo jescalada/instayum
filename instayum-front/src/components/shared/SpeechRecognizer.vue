@@ -17,21 +17,14 @@ import { api } from '@/stores/api'
 import { ref, watch } from 'vue'
 import { recipes } from '@/stores/recipes'
 
-const redirectedEvents = [
-  'audiostart',
-  'audioend',
-  'soundstart',
-  'soundend',
-  'speechstart',
-  'speechend',
-]
-
+// Define basic recognition variables
 const error = ref()
 const isRecognizing = ref<boolean>(false)
 const runtimeTranscription = ref<string>('')
 const transcription = ref()
 const requestSent = ref<boolean>(false)
 
+// Define props
 const props = withDefaults(
   defineProps<{
     lang: string
@@ -47,14 +40,7 @@ const props = withDefaults(
   }
 )
 
-watch(props, (newValue, oldValue) => {
-  for (var key in props) {
-    if (props.hasOwnProperty(key) && typeof props[key] !== 'undefined') {
-      recognition[key] = props[key]
-    }
-  }
-})
-
+// Define emits
 const emit = defineEmits([
   'start',
   'result',
@@ -69,6 +55,7 @@ const emit = defineEmits([
   'speechend',
 ])
 
+// Initialize speech recognition object
 const SpeechRecognition =
   window['SpeechRecognition'] || window['webkitSpeechRecognition']
 if (!SpeechRecognition) {
@@ -84,29 +71,31 @@ const start = () => {
   recognition.start()
 }
 
+// Get values from props and set to object
 recognition.lang = props.lang
 recognition.continuous = props.continuous
 recognition.maxAlternatives = props.maxAlternatives
 recognition.interimResults = props.interimResults
 
+// Reset the query and start listening
 recognition.addEventListener('start', () => {
   error.value = null
   isRecognizing.value = true
   requestSent.value = false
   landing.value.setQuery('')
 
-  console.log('Starting...')
   emit('start')
 })
 
+// Triggered on recognition error
 recognition.addEventListener('error', (err: string) => {
   error.value = err
   isRecognizing.value = false
-  console.log('Error: ', err)
+  console.log('Speech Recognition Error: ', err)
   emit('error', error)
 })
 
-// Store the runtime captured transciption text
+// Store the runtime captured transcription text
 recognition.addEventListener('result', async (event) => {
   const results = Array.from(event.results)
   const text = results
@@ -118,6 +107,7 @@ recognition.addEventListener('result', async (event) => {
     runtimeTranscription.value = text
     landing.value.setQuery(runtimeTranscription.value)
   }
+  // Redirect to results page by fetching recipes from query
   if (isFinal && !requestSent.value) {
     let results
     await fetch(
@@ -137,9 +127,9 @@ recognition.addEventListener('result', async (event) => {
       recognition.stop()
     })
   }
-  console.log(event, isFinal)
 })
 
+// Generic event logging
 recognition.addEventListener('nomatch', () => {
   console.error('Speech not recognized')
 })
@@ -152,9 +142,9 @@ recognition.addEventListener('soundend', (event) => {
   console.log('Sound has stopped being received')
 })
 
-// On recognition end if a good transciption has been captured
-// emit the transcription event with the whole transciptions list
-// and the last captured sentence than reset the runtime transciption
+// On recognition end if a good transcription has been captured
+// emit the transcription event with the whole transcriptions list
+// and the last captured sentence than reset the runtime transcription
 recognition.addEventListener('end', () => {
   isRecognizing.value = false
 
@@ -173,8 +163,6 @@ recognition.addEventListener('end', () => {
 </script>
 
 <style>
-i {
-}
 .speech-recognizer {
   cursor: pointer;
   position: relative;

@@ -18,8 +18,11 @@ const imageFilename =
     ? '/instayum_logo_mouth.png'
     : props.img
 
+/**
+ * View recipe by id
+ * @param recipeId 
+ */
 function viewRecipe(recipeId: number) {
-  console.log('Attempting to view reipce')
   location.href = `/#/recipe/${recipeId}`
 }
 </script>

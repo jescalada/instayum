@@ -1,3 +1,6 @@
+/**
+ * Store for landing page values
+ */
 import { ref } from 'vue'
 
 export const landing = ref({

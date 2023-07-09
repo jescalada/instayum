@@ -12,10 +12,11 @@
 
 <script setup lang="ts">
 import { landing } from '@/stores/landing'
-import { onUnmounted, ref, watch } from 'vue'
+import { onUnmounted, ref } from 'vue'
 import { commands } from '@/stores/commands'
 import { RecipeCommand } from './RecipeCommand'
 
+// Define basic recognition variables
 const error = ref()
 const isRecognizing = ref<boolean>(false)
 const runtimeTranscription = ref<string>('')
@@ -36,14 +37,6 @@ const props = withDefaults(
   }
 )
 
-watch(props, (newValue, oldValue) => {
-  for (var key in props) {
-    if (props.hasOwnProperty(key) && typeof props[key] !== 'undefined') {
-      recognition[key] = props[key]
-    }
-  }
-})
-
 const emit = defineEmits([
   'start',
   'result',
@@ -58,6 +51,7 @@ const emit = defineEmits([
   'speechend',
 ])
 
+// Instantiate speech recognition object
 const SpeechRecognition =
   window['SpeechRecognition'] || window['webkitSpeechRecognition']
 if (!SpeechRecognition) {
@@ -73,28 +67,29 @@ const start = () => {
   recognition.start()
 }
 
+// Get the values from the props
 recognition.lang = props.lang
 recognition.continuous = props.continuous
 recognition.maxAlternatives = props.maxAlternatives
 recognition.interimResults = props.interimResults
 
+// Resets the query on start
 recognition.addEventListener('start', () => {
   error.value = null
   isRecognizing.value = true
   landing.value.setQuery('')
-
-  console.log('Starting...')
   emit('start')
 })
 
+// On error, logs the error
 recognition.addEventListener('error', (err: string) => {
   error.value = err
   isRecognizing.value = false
-  console.log('Error: ', err)
+  console.log('Recognition error: ', err)
   emit('error', error)
 })
 
-// Store the runtime captured transciption text
+// Store the runtime captured transcription text
 recognition.addEventListener('result', async (event) => {
   const results = Array.from(event.results)
   const text = results
@@ -102,10 +97,14 @@ recognition.addEventListener('result', async (event) => {
     .map((result) => result.transcript)
     .join('')
   const isFinal = results.some((result: { isFinal: boolean }) => result.isFinal)
+  
+  // Build the transcription so as long as the user is talking
   if (text && !isFinal) {
     runtimeTranscription.value = text
     landing.value.setQuery(runtimeTranscription.value)
   }
+
+  // If user stopped talking, process the command and end the voice recognition
   if (isFinal) {
     const command: RecipeCommand = processCommand(runtimeTranscription.value)
     commands.value.setActiveRecipeCommand(RecipeCommand.Invalid)
@@ -113,11 +112,12 @@ recognition.addEventListener('result', async (event) => {
     recognition.abort()
     setTimeout(() => {
       recognition.start()
-    }, 1000)
+    }, 500)
   }
-  console.log(event, isFinal)
 })
 
+
+// Generic event listeners for logging
 recognition.addEventListener('nomatch', () => {
   console.error('Speech not recognized')
 })
@@ -129,9 +129,10 @@ recognition.addEventListener('speechend', () => {
 recognition.addEventListener('soundend', (event) => {
   console.log('Sound has stopped being received')
 })
-// On recognition end if a good transciption has been captured
-// emit the transcription event with the whole transciptions list
-// and the last captured sentence than reset the runtime transciption
+
+// If a good transciption has been captured:
+// emit the transcription event with the whole transcriptions list
+// and the last captured sentence, finally reset the recognition
 recognition.addEventListener('end', () => {
   isRecognizing.value = false
 
@@ -148,6 +149,11 @@ recognition.addEventListener('end', () => {
   emit('end')
 })
 
+/**
+ * Parses speech recognition text into a RecipeCommand
+ * @param text the text to parse
+ * @return a RecipeCommand which can be activated in the recipe page
+ */
 function processCommand(text: string): RecipeCommand {
   // todo: implement intelligent command matching using Natural Language Processing
   // todo: improve matching efficiency
@@ -175,8 +181,10 @@ function processCommand(text: string): RecipeCommand {
   }
 }
 
+// Start the component on Vue component initialization
 start()
 
+// Stop the recognition object when Vue component is destroyed 
 onUnmounted(() => {
   recognition.abort()
 })

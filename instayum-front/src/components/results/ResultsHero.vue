@@ -1,9 +1,5 @@
 <script setup lang="ts">
-import { recipes } from '@/stores/recipes'
 import SearchBox from '../shared/SearchBox.vue'
-import { landing } from '@/stores/landing'
-
-const query = landing.value.query
 </script>
 
 <template>

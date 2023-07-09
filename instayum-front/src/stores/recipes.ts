@@ -1,4 +1,6 @@
-import { RecipeCommand } from '@/components/recipe/RecipeCommand'
+/**
+ * Store for recipe related values
+ */
 import { ref } from 'vue'
 
 export const recipes = ref({

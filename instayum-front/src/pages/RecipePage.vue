@@ -9,9 +9,12 @@ import InteractiveSteps from '@/components/recipe/InteractiveSteps.vue'
 
 const handsFree = ref(false)
 
+/**
+ * Toggles hands-free mode
+ * @param value sets the hands-free status to this value
+ */
 function toggleHandsFree(value: boolean) {
   handsFree.value = value
-  console.log('toggled!')
 }
 </script>
 

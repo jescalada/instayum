@@ -4,6 +4,9 @@ import { ref } from 'vue'
 const handsFree = ref(false)
 const emit = defineEmits(['toggleHandsFree'])
 
+/**
+ * Toggles the hands-free switch (checkbox) by emitting an event
+ */
 function toggleCheckbox() {
   handsFree.value = !handsFree.value
   emit('toggleHandsFree', handsFree.value)

@@ -17,11 +17,15 @@ window.addEventListener('hashchange', () => {
   currentPath.value = window.location.hash
 })
 
+/**
+ * Dynamically computes the current view based on the current route value.
+ */
 const currentView = computed(() => {
   const routeSplit = currentPath.value.slice(1).split('/')
   recipes.value.setActiveId(+routeSplit?.[2])
   return routes[routeSplit[1] || '']
 })
+
 </script>
 
 <template>

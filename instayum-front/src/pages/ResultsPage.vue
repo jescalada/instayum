@@ -4,12 +4,6 @@ import ResultsHero from '@/components/results/ResultsHero.vue'
 import RecipeResultCard from '@/components/results/RecipeResultCard.vue'
 import { recipes } from '@/stores/recipes'
 import { landing } from '@/stores/landing'
-
-function computeDummyTime() {}
-
-function computeDifficulty() {}
-
-function generateDescription() {}
 </script>
 
 <template>

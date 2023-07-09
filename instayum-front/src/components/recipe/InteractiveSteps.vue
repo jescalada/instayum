@@ -12,22 +12,22 @@ const currentStepNumber = ref<number>(-1)
 const ingredients = recipes.value.activeRecipe.ingredients
 const steps = recipes.value.activeRecipe.steps
 
+// Watches for changes in the command, and automatically triggers them
 watch(commands.value, (commandsState, previousCommandsState) => {
   document.getElementById('command-box')?.scrollIntoView({ behavior: 'smooth' })
-  console.log('command, previous command', commandsState, previousCommandsState)
   commandTrigger(commandsState.activeRecipeCommand)
 })
 
+// Triggers the ingredient command on component mounted
 onMounted(() => {
   commandTrigger(RecipeCommand.Ingredients)
 })
 
+/**
+ * Triggers a recipe command
+ * @param command the RecipeCommand to trigger
+ */
 function commandTrigger(command: RecipeCommand) {
-  console.log(
-    '*** current value, command before trigger: ',
-    currentStepNumber.value,
-    command
-  )
   switch (command) {
     case RecipeCommand.First:
       onFirst()
@@ -50,6 +50,9 @@ function commandTrigger(command: RecipeCommand) {
   synthesize()
 }
 
+/**
+ * Generates voice using voice synthesis depending on the current step number.
+ */
 async function synthesize() {
   if (currentStepNumber.value == -1) {
     let ingredientSpeech = 'Ingredients: '
@@ -72,35 +75,56 @@ async function synthesize() {
       `Step ${currentStepNumber.value + 1}: ${stepText}`
     )
   }
-  console.log('synthesizing...')
   synthesizer.value?.speak(recipes.value.stepText)
 }
 
+
+/**
+ * Triggers the Next command (Next Step)
+ */
 function onNext() {
   if (currentStepNumber.value < steps.length - 1) {
-    console.log('current Step: ', currentStepNumber)
     currentStepNumber.value += 1
   }
 }
 
+/**
+ * Triggers the Previous command (Previous Step)
+ */
 function onPrevious() {
   if (currentStepNumber.value > 0) {
     currentStepNumber.value -= 1
   }
 }
 
+/**
+ * Triggers the First command (Step 0)
+ */
 function onFirst() {
   currentStepNumber.value = 0
 }
 
+/**
+ * Triggers the Ingredients command (Step -1)
+ */
 function onIngredients() {
   currentStepNumber.value = -1
 }
 
+/**
+ * Repeats the previous command.
+ */
 function onRepeat() {
-  // todo repeat voice synthesis
+  // Doesn't need to do anything, repeat works by default
 }
 
+/**
+ * Formats an ingredient to its human-readable plural form.
+ * Example: formatPluralIngredientUnits(3, "", "onion") -> "3 onions"
+ * @param units the number of units for this ingredient. Ex: 3, 500, 1/2
+ * @param unitName the name of the units: Ex: pieces, grams, liters
+ * @param ingredientName the name of the ingredient, in singular. Ex: onion, tomato, pear
+ */
 function formatPluralIngredientUnits(
   units: number,
   unitName: string,
@@ -114,6 +138,9 @@ function formatPluralIngredientUnits(
   } ${ingredientName}`
 }
 
+/**
+ * Helper function to trim the right portion based on a character
+ */
 function rtrim(word: string, char: string) {
   var end = word.length - 1
   while (char.indexOf(word[end]) >= 0) {
@@ -122,10 +149,14 @@ function rtrim(word: string, char: string) {
   return word.substr(0, end + 1)
 }
 
+// Initialize a reactive reference of the voice synthesizer object
 const synthesizer = ref()
 </script>
 <template>
+  <!-- Main container -->
   <div class="max-w-4xl mx-auto block ml-2" id="command-box">
+    
+    <!-- Active Command display -->
     <h3 class="font-semibold text-2xl m-4 text-left text-indigo-700">
       Command: {{ commands.activeRecipeCommand }}
     </h3>
@@ -133,6 +164,8 @@ const synthesizer = ref()
       Example commands: <br>What's the <b>First</b> step?<br>What's the <b>Next</b> step?<br>What's the <b>Previous</b> step?<br>Can you <b>Repeat</b> that?<br>
       What are the <b>Ingredients</b>?
     </p>
+
+    <!-- Interactive content -->
     <div
       v-if="currentStepNumber >= 0"
       class="ml-3 my-4 flex flex-col md:flex-row md:space-x-4 justify-between"
@@ -155,6 +188,8 @@ const synthesizer = ref()
       />
     </div>
     <IngredientsCard v-if="currentStepNumber == -1" />
+    
+    <!-- Interpreter and Synthesizer initialized as well (hidden) -->
     <CommandInterpreter />
     <SpeechSynthesizer ref="synthesizer" />
   </div>

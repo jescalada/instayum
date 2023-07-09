@@ -1,3 +1,7 @@
+/**
+ * Store for active recipe command
+ */
+
 import { RecipeCommand } from '@/components/recipe/RecipeCommand'
 import { ref } from 'vue'
 

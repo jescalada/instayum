@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// Store the voices fetched from the API
 let voices: SpeechSynthesisVoice[]
 
 // Create a new utterance for the specified text and add it to
@@ -11,7 +12,7 @@ const speak = async (text: string) => {
   }
 
   let msg = new SpeechSynthesisUtterance(text)
-  console.log(msg)
+  // Use female English Voice from Google
   msg.voice = voices.find(voice => voice.name.includes('Google US English'))
 
   // Queue this utterance.
@@ -22,6 +23,7 @@ defineExpose({
   speak,
 })
 
+// Initialize Speech Synthesizer
 const speechSynthesis =
   window['speechSynthesis'] || window['webkitSpeechSynthesis']
 if (!speechSynthesis) {

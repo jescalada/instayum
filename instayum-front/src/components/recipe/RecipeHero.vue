@@ -3,6 +3,7 @@ import { recipes } from '@/stores/recipes'
 import { api } from '@/stores/api'
 import { onMounted, ref } from 'vue'
 
+// Define reactive parameters
 const recipe = ref({
   recipeName: 'Default Recipe',
   imageFilename: 'Default',
@@ -10,8 +11,9 @@ const recipe = ref({
 const difficultyColor = ref('text-green-600')
 const difficultyText = ref('Easy')
 
-// Compute difficulty of recipe
-// Currently handles this naively by checking the number of steps in the recipe
+/**
+ * Compute difficulty of recipe. (Currently handles this naively by checking the number of steps in the recipe) 
+ */ 
 function setDifficultyColor(recipe) {
   if (recipe.steps.length > 6) {
     difficultyColor.value = 'text-red-700'
@@ -25,7 +27,11 @@ function setDifficultyColor(recipe) {
   }
 }
 
+/**
+ * Fetch a recipe from our backend API
+ */
 async function fetchRecipe() {
+  // Logging added to make sure the right API_PATH is being used in production
   console.log('fetching recipe at API_PATH: ', api.API_PATH)
   fetch(`${api.API_PATH}/recipes/${recipes.value.activeId}`).then(
     async (response) => {
@@ -40,15 +46,18 @@ async function fetchRecipe() {
   )
 }
 
+// Fetch recipe details immediately on mount
 onMounted(() => {
   fetchRecipe()
 })
 </script>
 
 <template>
+  <!-- Recipe Hero Container -->
   <div
     class="flex flex-col items-center justify-center p-2 pt-8 mx-auto w-full text-center"
   >
+  <!-- Recipe Details -->
     <div class="flex md:flex-row flex-col rounded-xl">
       <img
         :src="recipe.imageFilename"
@@ -58,6 +67,7 @@ onMounted(() => {
         <h2 class="text-2xl font-bold p-2 mb-2 md:mt-2 text-indigo-700">
           {{ recipe.recipeName }}
         </h2>
+        <!-- Extra details -->
         <div class="flex flex-col self-end align-bottom m-2">
           <div class="flex flex-row font-semibold">
             <i class="fa-solid fa-gauge p-1 mr-2"></i>

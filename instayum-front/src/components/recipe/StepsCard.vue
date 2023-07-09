@@ -2,6 +2,7 @@
 import { recipes } from '@/stores/recipes'
 </script>
 <template>
+  <!-- Steps Container for Static recipe view -->
   <div class="max-w-4xl md:mx-auto text-left block ml-2">
     <h3 class="font-semibold text-2xl my-4 text-indigo-700 ml-6">Steps</h3>
     <div

@@ -3,9 +3,14 @@ import SearchBox from '../shared/SearchBox.vue'
 </script>
 
 <template>
+  <!-- Landing Page Hero -->
   <div class="mx-auto bg-indigo-50">
+
     <div class="flex flex-col items-center justify-center p-2 pt-6">
+
       <SearchBox />
+
+      <!-- Instructions -->
       <div class="text-indigo-700 max-w-xl">
         <h2 class="mt-6 text-2xl">How to use:</h2>
         <p class="mt-4 mb-4 text-left">
@@ -25,6 +30,8 @@ import SearchBox from '../shared/SearchBox.vue'
         </p>
         <img src="/instayum_logo_mouth_only.png" />
       </div>
+
     </div>
+
   </div>
 </template>

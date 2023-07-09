@@ -1,8 +1,4 @@
 <script setup lang="ts">
-import LandingPage from '@/pages/LandingPage.vue'
-import ResultsPage from '@/pages/ResultsPage.vue'
-import { ref, computed } from 'vue'
-
 function toggleHamburgerMenu() {
   const btn = document.getElementById('menu-btn')
   const menu = document.getElementById('menu')
@@ -28,7 +24,7 @@ function toggleHamburgerMenu() {
         <div class="hidden h-10 text-xl items-center px-4 md:flex md:space-x-8">
           <!-- About Link -->
           <div class="group">
-            <a href="#/results">Results Test</a>
+            <a href="#/about">About</a>
             <div
               class="mx-2 group-hover:border-b group-hover:border-blue-50"
             ></div>
@@ -36,7 +32,7 @@ function toggleHamburgerMenu() {
 
           <!-- GitHub Link -->
           <div class="group">
-            <a href="https://github.com/jescalada" target="_blank">GitHub</a>
+            <a href="https://github.com/jescalada/instayum" target="_blank">GitHub</a>
             <div
               class="mx-2 group-hover:border-b group-hover:border-blue-50"
             ></div>
@@ -45,10 +41,10 @@ function toggleHamburgerMenu() {
 
         <div class="md:hidden">
           <button
-            @click="toggleHamburgerMenu()"
             id="menu-btn"
             type="button"
             class="z-40 block hamburger md:hidden focus:outline-none"
+            @click="toggleHamburgerMenu()"
           >
             <span class="hamburger-top"></span>
             <span class="hamburger-middle"></span>
@@ -62,8 +58,8 @@ function toggleHamburgerMenu() {
         id="menu"
         class="z-1000 absolute top-0 bottom-0 left-0 hidden flex-col self-end w-full min-h-screen py-1 pt-32 space-y-5 text-3xl text-white bg-indigo-700 bg-opacity-80 font-bold"
       >
-        <a href="#" class="hover:text-pink-500">About</a>
-        <a href="#" class="hover:text-pink-500">GitHub</a>
+        <a href="#/about" class="hover:text-pink-500">About</a>
+        <a href="https://github.com/jescalada/instayum" class="hover:text-pink-500" target="_blank">GitHub</a>
         <p class="text-xl font-thin">
           Made with ❤️ by
           <a
